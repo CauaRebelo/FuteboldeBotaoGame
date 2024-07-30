@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TelaResultado.unity
     guid: 41dd847542b46b5489b016be10d195e1
+  - enabled: 1
+    path: Assets/Scenes/TelaSelecao2.unity
+    guid: 2dee6cfa057b46f44bc0ac3b0cc14352
   m_configObjects: {}

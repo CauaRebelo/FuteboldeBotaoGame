@@ -1,28 +1,55 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 public class ExampleClass : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private LineRenderer lineRend;
 
     public float power = 10;
     public Vector2 minPower;
     public Vector2 maxPower;
     public bool myTurn = true;
     public bool recentPlay = false;
+    public bool player2 = false;
+    public bool usable = true;
+    public int type = 0;
 
     public Renderer rend;
     Vector2 force;
     Vector3 mousePos;
+    Vector3 linePos;
     Vector3 startPoint;
     Vector3 endPoint;
+
+    [field: SerializeField]
+    public UnityEvent<int> OnType { get; set; }
 
     void Start()
     {
         EventSystem.current.onSwapPlayer += OnSwapPlayer;
-        EventSystem.current.onGoal += OnGoal;
+        EventSystem.current.onGoalPlayer1 += OnGoalPlayer1;
+        EventSystem.current.onGoalPlayer2 += OnGoalPlayer2;
         EventSystem.current.onBallPlay += OnBallPlay;
+        EventSystem.current.onEndGame += OnEndGame;
         rend = GetComponent<Renderer>();
+        if(player2)
+        {
+            type = Info_Player.teamp2;
+        }
+        else
+        {
+            type = Info_Player.teamp1;
+        }
+        OnType.Invoke(type);
+        if(!usable)
+        {
+            Destroy(this);
+        }
+        lineRend.positionCount = 2;
+
     }
 
     void OnMouseDown()
@@ -41,6 +68,11 @@ public class ExampleClass : MonoBehaviour
         if (myTurn)
         {
             mousePos = Input.mousePosition;
+            linePos = Camera.main.ScreenToWorldPoint(mousePos);
+            linePos.z = 15;
+
+            lineRend.SetPosition(0, transform.position);
+            lineRend.SetPosition(1, new Vector3(linePos.x, linePos.y, 0f));
         }
         //mousePos.z = Camera.main.nearClipPlane;
         //Debug.Log(Camera.main.ScreenToWorldPoint(mousePos));
@@ -54,6 +86,7 @@ public class ExampleClass : MonoBehaviour
         if(myTurn)
         {
             Debug.Log("Drag ended!");
+            lineRend.SetPosition(1, transform.position);
             mousePos = Input.mousePosition;
             endPoint = Camera.main.ScreenToWorldPoint(mousePos);
             endPoint.z = 15;
@@ -69,9 +102,39 @@ public class ExampleClass : MonoBehaviour
     {
         myTurn = false;
     }
-    void OnGoal()
+
+    void OnGoalPlayer1()
     {
-        //Something
+        if (player2)
+        {
+            recentPlay = false;
+            myTurn = true;
+        }
+        else
+        {
+            recentPlay = true;
+            myTurn = false;
+        }
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = 0f;
+        transform.position = spawnPoint.position;
+    }
+
+    void OnGoalPlayer2()
+    {
+        if (!player2)
+        {
+            recentPlay = false;
+            myTurn = true;
+        }
+        else
+        {
+            recentPlay = true;
+            myTurn = false;
+        }
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = 0f;
+        transform.position = spawnPoint.position;
     }
 
     void OnSwapPlayer()
@@ -81,5 +144,19 @@ public class ExampleClass : MonoBehaviour
         {
             myTurn = !myTurn;
         }
+    }
+
+    void OnEndGame()
+    {
+        myTurn = false;
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onSwapPlayer -= OnSwapPlayer;
+        EventSystem.current.onGoalPlayer1 -= OnGoalPlayer1;
+        EventSystem.current.onGoalPlayer2 -= OnGoalPlayer2;
+        EventSystem.current.onBallPlay -= OnBallPlay;
+        EventSystem.current.onEndGame -= OnEndGame;
     }
 }

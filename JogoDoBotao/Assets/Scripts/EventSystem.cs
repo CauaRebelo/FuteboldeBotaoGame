@@ -21,12 +21,30 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action onGoal;
-    public void Goal()
+    public event Action onGoalPlayer1;
+    public void GoalPlayer1()
     {
-        if (onGoal != null)
+        if (onGoalPlayer1 != null)
         {
-            onGoal();
+            onGoalPlayer1();
+        }
+    }
+
+    public event Action onGoalPlayer2;
+    public void GoalPlayer2()
+    {
+        if (onGoalPlayer2 != null)
+        {
+            onGoalPlayer2();
+        }
+    }
+
+    public event Action onEndGame;
+    public void EndGame()
+    {
+        if (onEndGame != null)
+        {
+            onEndGame();
         }
     }
 

@@ -7,7 +7,8 @@ public class RegrasJogo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventSystem.current.onGoal += OnGoal;
+        EventSystem.current.onGoalPlayer1 += OnGoalPlayer1;
+        EventSystem.current.onGoalPlayer2 += OnGoalPlayer2;
         EventSystem.current.onBallPlay += OnBallPlay;
     }
 
@@ -22,10 +23,14 @@ public class RegrasJogo : MonoBehaviour
         StartCoroutine(CheckObjectsHaveStopped());
     }
 
-    void OnGoal()
+    void OnGoalPlayer1()
     {
         StopAllCoroutines();
-        EventSystem.current.SwapPlayer();
+    }
+
+    void OnGoalPlayer2()
+    {
+        StopAllCoroutines();
     }
 
     IEnumerator CheckObjectsHaveStopped()

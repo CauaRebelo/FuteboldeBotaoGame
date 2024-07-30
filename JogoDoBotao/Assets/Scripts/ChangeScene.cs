@@ -13,6 +13,11 @@ public class ChangeScene : MonoBehaviour
         SceneManager.LoadScene("TelaSelecao");
     }
 
+    public void loadSceneSelecao2()
+    {
+        SceneManager.LoadScene("TelaSelecao2");
+    }
+
     public void loadSceneJogo()
     {
         SceneManager.LoadScene("TelaJogo");
