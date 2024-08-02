@@ -29,6 +29,7 @@ public class Bola : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
         transform.position = spawnPoint.position;
+        transform.rotation = Quaternion.identity;
     }
 
     void OnGoalPlayer2()
@@ -36,5 +37,6 @@ public class Bola : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
         transform.position = spawnPoint.position;
+        transform.rotation = Quaternion.identity;
     }
 }

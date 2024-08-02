@@ -54,7 +54,7 @@ public class ExampleClass : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(myTurn)
+        if (myTurn)
         {
             // If your mouse hovers over the GameObject with the script attached, output this message
             Debug.Log("Drag started!");
@@ -72,7 +72,12 @@ public class ExampleClass : MonoBehaviour
             linePos.z = 15;
 
             lineRend.SetPosition(0, transform.position);
-            lineRend.SetPosition(1, new Vector3(linePos.x, linePos.y, 0f));
+            lineRend.SetPosition(1, new Vector3(2* startPoint.x - linePos.x, 2 * startPoint.y - linePos.y, 0f));
+        }
+        else
+        {
+            startPoint = transform.position;
+            startPoint.z = 15;
         }
         //mousePos.z = Camera.main.nearClipPlane;
         //Debug.Log(Camera.main.ScreenToWorldPoint(mousePos));
@@ -83,7 +88,7 @@ public class ExampleClass : MonoBehaviour
     void OnMouseUp()
     {
         // If your mouse hovers over the GameObject with the script attached, output this message
-        if(myTurn)
+        if (myTurn)
         {
             Debug.Log("Drag ended!");
             lineRend.SetPosition(1, transform.position);
@@ -118,6 +123,7 @@ public class ExampleClass : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
         transform.position = spawnPoint.position;
+        transform.rotation = Quaternion.identity;
     }
 
     void OnGoalPlayer2()
@@ -135,6 +141,7 @@ public class ExampleClass : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0f;
         transform.position = spawnPoint.position;
+        transform.rotation = Quaternion.identity;
     }
 
     void OnSwapPlayer()

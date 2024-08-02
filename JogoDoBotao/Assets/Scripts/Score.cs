@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class Score : MonoBehaviour
 {
     public int score_p1;
     public int score_p2;
+    public bool paused = true;
     public float remainingTime = 180f;
     public string name_p1;
     public string name_p2;
@@ -26,6 +28,7 @@ public class Score : MonoBehaviour
     {
         EventSystem.current.onGoalPlayer1 += OnGoalPlayer1;
         EventSystem.current.onGoalPlayer2 += OnGoalPlayer2;
+        EventSystem.current.onBallPlay += OnBallPlay;
         Info_Player.scorep1 = 0;
         Info_Player.scorep2 = 0;
         score_p1 = 0;
@@ -37,13 +40,26 @@ public class Score : MonoBehaviour
         textoScore_p1.SetText(score_p1.ToString());
         textoScore_p2.SetText(score_p1.ToString());
         SoundFXManager.instance.PlaySoundFXClip(startSFX, transform, 1f);
+        StartCoroutine(GiveTip());
     }
 
     private void Update()
     {
         if(remainingTime > 0)
         {
-            remainingTime -= Time.deltaTime;
+            if(!paused)
+            {
+                remainingTime -= Time.deltaTime;
+                textoTimer.color = Color.white;
+                if(remainingTime <= 10f)
+                {
+                    textoTimer.color = Color.red;
+                }
+            }
+            else
+            {
+                textoTimer.color = Color.blue;
+            }
         }
         else
         {
@@ -64,28 +80,34 @@ public class Score : MonoBehaviour
         StartCoroutine(EndGame());
     }
 
-    //IEnumerator GiveTip()
-    //{
-    //    //tip.SetActive(true);
-    //    //yield return new WaitForSeconds(5f);
-    //    //tip.SetActive(false);
-    //}
+    IEnumerator GiveTip()
+    {
+        tip.SetActive(true);
+        yield return new WaitForSeconds(7f);
+        tip.SetActive(false);
+    }
     void OnGoalPlayer1()
     {
         score_p1++;
         Info_Player.scorep1++;
         textoScore_p1.SetText(score_p1.ToString());
+        paused = true;
     }
     void OnGoalPlayer2()
     {
         score_p2++;
         Info_Player.scorep2++;
         textoScore_p2.SetText(score_p2.ToString());
+        paused = true;
     }
 
     IEnumerator EndGame()
     {
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("TelaResultado");
+    }
+    void OnBallPlay()
+    {
+        paused = false;
     }
 }
